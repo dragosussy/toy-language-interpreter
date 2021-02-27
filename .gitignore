@@ -29,3 +29,7 @@ hs_err_pid*
 .idea
 *.iml
 *.out
+*.dll
+
+interpreter/javafx-sdk-11.0.2/lib/javafx.properties
+interpreter/javafx-sdk-11.0.2/legal/*

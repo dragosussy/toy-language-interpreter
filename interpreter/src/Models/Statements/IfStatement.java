@@ -1,10 +1,12 @@
 package Models.Statements;
 
 import Exceptions.InvalidTypeException;
+import Models.ADTs.MyDictionary.MyDictionary;
 import Models.ADTs.MyStack.MyStack;
 import Models.Expressions.IExpression;
 import Models.ProgramState;
 import Models.Types.BoolType;
+import Models.Types.IType;
 import Models.Values.BoolValue;
 import Models.Values.IValue;
 
@@ -42,6 +44,20 @@ public class IfStatement implements IStatement {
             stack.push(elseStatement);
         }
 
-        return state;
+        return null;
+    }
+
+    @Override
+    public MyDictionary<String, IType> typeCheck(MyDictionary<String, IType> typeEnvironment) throws RuntimeException {
+        var conditionType = this.condition.typeCheck(typeEnvironment);
+
+        if (!conditionType.equals(new BoolType())){
+            throw new InvalidTypeException("Condition in 'if' statement doesn't evaluate to bool.");
+        }
+
+        this.thenStatement.typeCheck(typeEnvironment.deepCopy());
+        this.elseStatement.typeCheck(typeEnvironment.deepCopy());
+
+        return typeEnvironment;
     }
 }

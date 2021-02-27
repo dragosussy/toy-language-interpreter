@@ -12,7 +12,10 @@ public class RunCommand extends Command {
 
     @Override
     public void execute() {
-        //this.controller.executeCurrentProgram();
-        this.controller.executeProgram(Integer.parseInt(this.getKey()) - 1);
+        try {
+            this.controller.allSteps(Integer.parseInt(this.getKey()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

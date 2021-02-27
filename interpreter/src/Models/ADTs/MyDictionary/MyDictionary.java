@@ -24,15 +24,21 @@ public class MyDictionary<K, V> extends HashMap<K, V> {
         this.put(id, value);
     }
 
+    public MyDictionary<K, V> deepCopy(){
+        var newDictionary = new MyDictionary<K, V>();
+        this.forEach(newDictionary::put);
+        return newDictionary;
+    }
+
     @Override
     public String toString() {
-        var printValue = new StringBuilder().append("{ ");
+        var printValue = new StringBuilder().append("{  ");
         this.forEach((key, value) -> {
             printValue
                     .append(key)
                     .append("->")
                     .append(value)
-                    .append(" ");
+                    .append("  ");
         });
         printValue.append("}");
         return printValue.toString();

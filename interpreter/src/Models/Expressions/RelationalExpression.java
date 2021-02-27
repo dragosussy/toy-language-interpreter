@@ -3,7 +3,9 @@ package Models.Expressions;
 import Exceptions.InvalidTypeException;
 import Models.ADTs.MyDictionary.MyDictionary;
 import Models.Expressions.Operations.RelationalOperation;
-import Models.Heap.IHeap;
+import Models.Heap.Heap;
+import Models.Types.BoolType;
+import Models.Types.IType;
 import Models.Types.IntType;
 import Models.Values.BoolValue;
 import Models.Values.IValue;
@@ -21,7 +23,7 @@ public class RelationalExpression implements IExpression {
     }
 
     @Override
-    public IValue evaluate(MyDictionary<String, IValue> variablesTable, IHeap<IValue> heap) throws RuntimeException {
+    public IValue evaluate(MyDictionary<String, IValue> variablesTable, Heap<IValue> heap) throws RuntimeException {
         IValue lhs, rhs;
 
         lhs = this.leftHandSide.evaluate(variablesTable, heap);
@@ -38,6 +40,18 @@ public class RelationalExpression implements IExpression {
         int i2 = ((IntValue) rhs).getValue();
 
         return getValueAfterOperation(i1, this.sign, i2);
+    }
+
+    @Override
+    public IType typeCheck(MyDictionary<String, IType> typeEnvironment) throws RuntimeException {
+        var lhsType = this.leftHandSide.typeCheck(typeEnvironment);
+        var rhsType = this.rightHandSide.typeCheck(typeEnvironment);
+
+        if (!lhsType.equals(new IntType()) || !rhsType.equals(new IntType())){
+            throw new InvalidTypeException("Attempted relational expression between non-integer types.");
+        }
+
+        return new BoolType();
     }
 
     private IValue getValueAfterOperation(int operand1, RelationalOperation sign, int operand2) throws RuntimeException {

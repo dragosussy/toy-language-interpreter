@@ -1,7 +1,9 @@
 package Models.Statements;
 
+import Models.ADTs.MyDictionary.MyDictionary;
 import Models.ADTs.MyStack.MyStack;
 import Models.ProgramState;
+import Models.Types.IType;
 
 import java.util.Arrays;
 
@@ -24,7 +26,12 @@ public class CompoundStatement implements IStatement {
         MyStack<IStatement> stack = state.getExecutionStack();
         stack.push(this.second);
         stack.push(this.first);
-        return state;
+        return null;
+    }
+
+    @Override
+    public MyDictionary<String, IType> typeCheck(MyDictionary<String, IType> typeEnvironment) throws RuntimeException {
+        return this.second.typeCheck(this.first.typeCheck(typeEnvironment));
     }
 
     @Deprecated

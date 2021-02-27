@@ -1,9 +1,13 @@
 package Models.Statements.File;
 
 import Exceptions.FileException;
+import Exceptions.InvalidTypeException;
+import Models.ADTs.MyDictionary.MyDictionary;
 import Models.Expressions.IExpression;
 import Models.ProgramState;
 import Models.Statements.IStatement;
+import Models.Types.IType;
+import Models.Types.IntType;
 import Models.Types.StringType;
 import Models.Values.IValue;
 import Models.Values.IntValue;
@@ -49,7 +53,23 @@ public class ReadFileStatement implements IStatement {
         int readValueToInt = line == null ? 0 : Integer.parseInt(line);
         state.getSymbolTable().update(this.variableName, new IntValue(readValueToInt));
 
-        return state;
+        return null;
+    }
+
+    @Override
+    public MyDictionary<String, IType> typeCheck(MyDictionary<String, IType> typeEnvironment) throws RuntimeException {
+        var variableType = typeEnvironment.lookup(this.variableName);
+        var expressionType = this.expression.typeCheck(typeEnvironment);
+
+        if (!expressionType.equals(new StringType())){
+            throw new InvalidTypeException("Invalid type for a file name.");
+        }
+
+        if (!variableType.equals(new IntType())){
+            throw new InvalidTypeException("Can only read integers from file.");
+        }
+
+        return typeEnvironment;
     }
 
     @Override

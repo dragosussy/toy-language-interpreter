@@ -3,8 +3,9 @@ package Models.Expressions;
 import Exceptions.InvalidTypeException;
 import Models.ADTs.MyDictionary.MyDictionary;
 import Models.Expressions.Operations.LogicalOperation;
-import Models.Heap.IHeap;
+import Models.Heap.Heap;
 import Models.Types.BoolType;
+import Models.Types.IType;
 import Models.Values.BoolValue;
 import Models.Values.IValue;
 
@@ -20,7 +21,7 @@ public class LogicalExpression implements IExpression {
     }
 
     @Override
-    public IValue evaluate(MyDictionary<String, IValue> variablesTable, IHeap<IValue> heap) throws RuntimeException {
+    public IValue evaluate(MyDictionary<String, IValue> variablesTable, Heap<IValue> heap) throws RuntimeException {
         IValue lhs, rhs;
 
         lhs = this.leftHandSide.evaluate(variablesTable, heap);
@@ -37,6 +38,18 @@ public class LogicalExpression implements IExpression {
         boolean b2 = ((BoolValue) rhs).getValue();
 
         return this.getValueAfterOperation(b1, this.sign, b2);
+    }
+
+    @Override
+    public IType typeCheck(MyDictionary<String, IType> typeEnvironment) throws RuntimeException {
+        var lhsType = this.leftHandSide.typeCheck(typeEnvironment);
+        var rhsType = this.rightHandSide.typeCheck(typeEnvironment);
+
+        if (!lhsType.equals(new BoolType()) || !rhsType.equals(new BoolType())){
+            throw new InvalidTypeException("Attempted logical expression between non-boolean types.");
+        }
+
+        return new BoolType();
     }
 
     private IValue getValueAfterOperation(boolean lhs, LogicalOperation sign, boolean rhs) {

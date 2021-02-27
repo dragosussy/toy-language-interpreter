@@ -4,7 +4,8 @@ import Exceptions.DivisionByZeroException;
 import Exceptions.InvalidTypeException;
 import Models.ADTs.MyDictionary.MyDictionary;
 import Models.Expressions.Operations.ArithmeticalOperation;
-import Models.Heap.IHeap;
+import Models.Heap.Heap;
+import Models.Types.IType;
 import Models.Types.IntType;
 import Models.Values.IValue;
 import Models.Values.IntValue;
@@ -21,7 +22,7 @@ public class ArithmeticalExpression implements IExpression {
     }
 
     @Override
-    public IValue evaluate(MyDictionary<String, IValue> variablesTable, IHeap<IValue> heap) throws RuntimeException {
+    public IValue evaluate(MyDictionary<String, IValue> variablesTable, Heap<IValue> heap) throws RuntimeException {
         IValue lhs, rhs;
 
         lhs = leftHandSide.evaluate(variablesTable, heap);
@@ -38,6 +39,18 @@ public class ArithmeticalExpression implements IExpression {
         int i2 = ((IntValue) rhs).getValue();
 
         return this.getValueAfterOperation(i1, this.sign, i2);
+    }
+
+    @Override
+    public IType typeCheck(MyDictionary<String, IType> typeEnvironment) throws RuntimeException {
+        var lhsType = this.leftHandSide.typeCheck(typeEnvironment);
+        var rhsType = this.rightHandSide.typeCheck(typeEnvironment);
+
+        if (!lhsType.equals(new IntType()) || !rhsType.equals(new IntType())) {
+            throw new InvalidTypeException("Attempted arithmetical expression between invalid types.");
+        }
+
+        return new IntType();
     }
 
     private IValue getValueAfterOperation(int operand1, ArithmeticalOperation sign, int operand2) throws RuntimeException {

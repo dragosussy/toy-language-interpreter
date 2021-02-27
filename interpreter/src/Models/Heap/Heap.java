@@ -1,50 +1,49 @@
 package Models.Heap;
 
 import Exceptions.HeapException;
+import Models.ADTs.MyDictionary.MyDictionary;
 
-import java.util.Dictionary;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Heap<T> implements IHeap<T> {
-    private final HashMap<Integer, T> allocations;
+public class Heap<T> extends MyDictionary<Integer, T> {
     private final AtomicInteger firstAvailableLocation;
 
     public Heap() {
         this.firstAvailableLocation = new AtomicInteger(1);
-        this.allocations = new HashMap<>();
     }
 
-    @Override
     public boolean isAvailableSpot(int address) {
-        return !this.allocations.containsKey(address);
+        return !this.isDefined(address);
     }
 
-    @Override
     public int allocate(T value) {
         int newLocation = this.firstAvailableLocation.incrementAndGet();
-        this.allocations.put(newLocation, value);
+        this.put(newLocation, value);
         return newLocation;
     }
 
-    @Override
     public T getValueAtAddress(int address) {
-        return this.allocations.get(address);
+        return this.get(address);
     }
 
-    @Override
     public void update(int address, T newValue) {
-        if (!this.allocations.containsKey(address)) {
+        if (!this.isDefined(address)) {
             throw new HeapException("Can't update an address that hasn't been allocated yet.");
         }
-        this.allocations.put(address, newValue);
+        this.put(address, newValue);
+    }
+
+    public void setContent(Map<Integer, T> map) {
+        this.clear();
+        map.forEach(this::put);
     }
 
     @Override
     public String toString() {
         StringBuilder printedHeap = new StringBuilder();
         printedHeap.append("{");
-        this.allocations.forEach((key, value) -> {
+        this.forEach((key, value) -> {
             printedHeap
                     .append(key)
                     .append("->")

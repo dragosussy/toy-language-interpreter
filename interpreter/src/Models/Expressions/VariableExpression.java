@@ -1,7 +1,8 @@
 package Models.Expressions;
 
 import Models.ADTs.MyDictionary.MyDictionary;
-import Models.Heap.IHeap;
+import Models.Heap.Heap;
+import Models.Types.IType;
 import Models.Values.IValue;
 
 public class VariableExpression implements IExpression {
@@ -12,8 +13,13 @@ public class VariableExpression implements IExpression {
     }
 
     @Override
-    public IValue evaluate(MyDictionary<String, IValue> variablesTable, IHeap<IValue> heap) throws RuntimeException {
+    public IValue evaluate(MyDictionary<String, IValue> variablesTable, Heap<IValue> heap) throws RuntimeException {
         return variablesTable.lookup(this.id);
+    }
+
+    @Override
+    public IType typeCheck(MyDictionary<String, IType> typeEnvironment) throws RuntimeException {
+        return typeEnvironment.lookup(this.id);
     }
 
     @Override

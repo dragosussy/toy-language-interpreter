@@ -19,15 +19,11 @@ public class FileLogger implements ILogger {
     }
 
     @Override
-    public void log() throws FileException {
-        try {
-            FileWriter file = new FileWriter(path);
-            file.write(this.message.toString());
-            this.flushBuffer();
-            file.close();
-        } catch (IOException e) {
-            throw new FileException(e.getMessage());
-        }
+    public void log() throws Exception {
+        FileWriter file = new FileWriter(path);
+        file.write(this.message.toString());
+        this.flushBuffer();
+        file.close();
     }
 
     @Override

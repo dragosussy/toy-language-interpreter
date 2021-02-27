@@ -1,9 +1,12 @@
 package Models.Statements.File;
 
 import Exceptions.FileException;
+import Exceptions.InvalidTypeException;
+import Models.ADTs.MyDictionary.MyDictionary;
 import Models.Expressions.IExpression;
 import Models.ProgramState;
 import Models.Statements.IStatement;
+import Models.Types.IType;
 import Models.Types.StringType;
 import Models.Values.IValue;
 import Models.Values.StringValue;
@@ -39,7 +42,16 @@ public class OpenReadFileStatement implements IStatement {
 
         state.getFileTable().put(path, file);
 
-        return state;
+        return null;
+    }
+
+    @Override
+    public MyDictionary<String, IType> typeCheck(MyDictionary<String, IType> typeEnvironment) throws RuntimeException {
+        if (!this.expression.typeCheck(typeEnvironment).equals(new StringType())){
+            throw new InvalidTypeException("Invalid type for a file name.");
+        }
+
+        return typeEnvironment;
     }
 
     @Override

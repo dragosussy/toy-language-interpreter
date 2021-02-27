@@ -34,7 +34,19 @@ public class AssignmentStatement implements IStatement {
 
         symbolTable.update(this.id, value);
 
-        return state;
+        return null;
+    }
+
+    @Override
+    public MyDictionary<String, IType> typeCheck(MyDictionary<String, IType> typeEnvironment) throws RuntimeException {
+        IType variableType = typeEnvironment.lookup(this.id);
+        IType expressionType = this.expression.typeCheck(typeEnvironment);
+
+        if (!variableType.equals(expressionType)) {
+            throw new InvalidTypeException("Assigned type doesn't match variable type.");
+        }
+
+        return typeEnvironment;
     }
 
     @Override

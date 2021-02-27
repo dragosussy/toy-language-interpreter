@@ -33,6 +33,12 @@ public class VariableDeclarationStatement implements IStatement {
 
         symbolTable.put(this.name, this.type.defaultValue());
 
-        return state;
+        return null;
+    }
+
+    @Override
+    public MyDictionary<String, IType> typeCheck(MyDictionary<String, IType> typeEnvironment) throws RuntimeException {
+        typeEnvironment.put(this.name, this.type);
+        return typeEnvironment;
     }
 }
