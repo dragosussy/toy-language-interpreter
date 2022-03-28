@@ -4,6 +4,10 @@
 # Log file
 *.log
 
+# I/O files
+*.in
+*.out
+
 # BlueJ files
 *.ctxt
 
@@ -21,3 +25,11 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+.idea
+*.iml
+*.out
+*.dll
+
+interpreter/javafx-sdk-11.0.2/lib/javafx.properties
+interpreter/javafx-sdk-11.0.2/legal/*
